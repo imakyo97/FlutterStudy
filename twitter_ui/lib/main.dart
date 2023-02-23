@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'widgetParts/AppBarCircleButton.dart';
+import 'widgetParts/TwitterBottomNavigationBar.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,6 +51,7 @@ class MyTwitterPage extends StatelessWidget {
         ],
       ),
       body: Center(),
+      bottomNavigationBar: const TwitterBottomNavigationBar(),
     );
   }
 }
