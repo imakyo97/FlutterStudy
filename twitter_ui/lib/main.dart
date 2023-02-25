@@ -29,6 +29,7 @@ class MyTwitterPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: const Color.fromARGB(255, 25, 25, 25),
       appBar: AppBar(
         title: Column(
           children: const [

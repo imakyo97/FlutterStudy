@@ -7,34 +7,44 @@ class TwitterBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BottomNavigationBar(
-      currentIndex: 1,
-      type: BottomNavigationBarType.fixed, // Fixed
-      backgroundColor: const Color.fromARGB(255, 25, 25, 25),
-      selectedItemColor: Colors.white,
-      unselectedItemColor: Colors.white,
-      items: const [
-        BottomNavigationBarItem(
-          label: "",
-          icon: Icon(Icons.home),
+    return Container(
+      decoration: const BoxDecoration(
+        border: Border(
+          top: BorderSide(
+            width: 1,
+            color: Colors.white10,
+          ),
         ),
-        BottomNavigationBarItem(
-          label: "",
-          icon: Icon(Icons.search),
-        ),
-        BottomNavigationBarItem(
-          label: "",
-          icon: Icon(Icons.people_alt_outlined),
-        ),
-        BottomNavigationBarItem(
-          label: "",
-          icon: Icon(Icons.notifications_none),
-        ),
-        BottomNavigationBarItem(
-          label: "",
-          icon: Icon(Icons.mail_outline),
-        ),
-      ],
+      ),
+      child: BottomNavigationBar(
+        currentIndex: 1,
+        type: BottomNavigationBarType.fixed, // Fixed
+        backgroundColor: const Color.fromARGB(255, 25, 25, 25),
+        selectedItemColor: Colors.white,
+        unselectedItemColor: Colors.white,
+        items: const [
+          BottomNavigationBarItem(
+            label: "",
+            icon: Icon(Icons.home),
+          ),
+          BottomNavigationBarItem(
+            label: "",
+            icon: Icon(Icons.search),
+          ),
+          BottomNavigationBarItem(
+            label: "",
+            icon: Icon(Icons.people_alt_outlined),
+          ),
+          BottomNavigationBarItem(
+            label: "",
+            icon: Icon(Icons.notifications_none),
+          ),
+          BottomNavigationBarItem(
+            label: "",
+            icon: Icon(Icons.mail_outline),
+          ),
+        ],
+      ),
     );
   }
 }
