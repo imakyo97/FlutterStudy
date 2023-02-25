@@ -101,6 +101,11 @@ class MyTwitterPage extends StatelessWidget {
           ],
         ),
         bottomNavigationBar: const TwitterBottomNavigationBar(),
+        floatingActionButton: FloatingActionButton(
+          backgroundColor: Colors.blue,
+          onPressed: () {},
+          child: const Icon(Icons.add),
+        ),
       ),
     );
   }
