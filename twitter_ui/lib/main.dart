@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'widgetParts/AppBarCircleButton.dart';
+import 'widgetParts/ColoredTabBar.dart';
 import 'widgetParts/TwitterBottomNavigationBar.dart';
 
 void main() {
@@ -26,33 +27,62 @@ class MyApp extends StatelessWidget {
 class MyTwitterPage extends StatelessWidget {
   const MyTwitterPage({super.key});
 
+  final tabs = const [
+    Tab(text: 'ツイート'),
+    Tab(text: 'ツイートと返信'),
+    Tab(text: 'メディア'),
+    Tab(text: 'いいね'),
+  ];
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color.fromARGB(255, 25, 25, 25),
-      appBar: AppBar(
-        title: Column(
-          children: const [
-            Text(
-              'こんぶ@Flutter大学',
-              style: TextStyle(fontWeight: FontWeight.bold),
+    return DefaultTabController(
+      length: tabs.length,
+      child: Scaffold(
+        backgroundColor: const Color.fromARGB(255, 25, 25, 25),
+        appBar: AppBar(
+          title: Column(
+            children: const [
+              Text(
+                'こんぶ@Flutter大学',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              Text(
+                'ツイート62,699',
+                style: TextStyle(fontSize: 12),
+              ),
+            ],
+          ),
+          centerTitle: true,
+          leading: const AppBarCircleButton(
+            iconData: Icons.west,
+          ),
+          actions: const [
+            AppBarCircleButton(iconData: Icons.search),
+          ],
+          bottom: ColoredTabBar(
+            color: const Color.fromARGB(255, 25, 25, 25),
+            tabBar: TabBar(
+              isScrollable: true,
+              tabs: tabs,
+              indicatorColor: Colors.cyan,
             ),
-            Text(
-              'ツイート62,699',
-              style: TextStyle(fontSize: 12),
-            ),
+          ),
+        ),
+        body: TabBarView(
+          children: [
+            ...tabs.map((tab) {
+              return Center(
+                child: Text(
+                  tab.text!,
+                  style: const TextStyle(color: Colors.white),
+                ),
+              );
+            }).toList()
           ],
         ),
-        centerTitle: true,
-        leading: const AppBarCircleButton(
-          iconData: Icons.west,
-        ),
-        actions: const [
-          AppBarCircleButton(iconData: Icons.search),
-        ],
+        bottomNavigationBar: const TwitterBottomNavigationBar(),
       ),
-      body: Center(),
-      bottomNavigationBar: const TwitterBottomNavigationBar(),
     );
   }
 }
