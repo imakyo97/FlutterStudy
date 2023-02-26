@@ -28,8 +28,35 @@ class SearchImagePage extends StatefulWidget {
 }
 
 class _SearchImagePageState extends State<SearchImagePage> {
+  List imagesURL = [];
+
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+      appBar: AppBar(
+        title: TextField(
+          decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.white,
+            contentPadding: const EdgeInsets.all(10),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide.none,
+            ),
+          ),
+        ),
+      ),
+      body: GridView.builder(
+        itemCount: imagesURL.length,
+        gridDelegate:
+            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
+        itemBuilder: ((context, index) {
+          return Image.network(
+            imagesURL[index],
+            fit: BoxFit.cover,
+          );
+        }),
+      ),
+    );
   }
 }
