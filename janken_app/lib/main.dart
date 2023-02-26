@@ -29,6 +29,48 @@ class MyHomePage extends StatefulWidget {
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  String get result {
+    if (randomHand == myHand) {
+      return 'あいこ';
+    } else if (randomHand == Hand.rock && myHand == Hand.paper ||
+        randomHand == Hand.scissors && myHand == Hand.rock ||
+        randomHand == Hand.paper && myHand == Hand.scissors) {
+      return '勝ち';
+    } else {
+      return '負け';
+    }
+  }
+
+  Hand randomHand = Hand.rock;
+  Hand myHand = Hand.scissors;
+  List<Hand> hands = [Hand.rock, Hand.scissors, Hand.paper];
+
+  void _createRandomHand() {
+    hands.shuffle();
+    randomHand = hands.first;
+  }
+
+  void _didTapRockButton() {
+    setState(() {
+      _createRandomHand();
+      myHand = Hand.rock;
+    });
+  }
+
+  void _didTapScissorsButton() {
+    setState(() {
+      _createRandomHand();
+      myHand = Hand.scissors;
+    });
+  }
+
+  void _didTapPaperButton() {
+    setState(() {
+      _createRandomHand();
+      myHand = Hand.paper;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -39,17 +81,17 @@ class _MyHomePageState extends State<MyHomePage> {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Text(
-              '勝ち',
+              result,
               style: const TextStyle(fontSize: 32),
             ),
             const SizedBox(height: 20),
             Text(
-              '🖐',
+              randomHand.displayNmae,
               style: const TextStyle(fontSize: 32),
             ),
             const SizedBox(height: 20),
             Text(
-              '✌️',
+              myHand.displayNmae,
               style: const TextStyle(fontSize: 32),
             ),
             const SizedBox(height: 20),
@@ -57,15 +99,15 @@ class _MyHomePageState extends State<MyHomePage> {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _didTapRockButton,
                   child: const Text('✊'),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _didTapScissorsButton,
                   child: const Text('✌️'),
                 ),
                 ElevatedButton(
-                  onPressed: () {},
+                  onPressed: _didTapPaperButton,
                   child: const Text('🖐'),
                 ),
               ],
@@ -73,4 +115,15 @@ class _MyHomePageState extends State<MyHomePage> {
           ],
         ));
   }
+}
+
+enum Hand {
+  rock('✊'),
+  scissors('✌️'),
+  paper('🖐'),
+  ;
+
+  const Hand(this.displayNmae);
+
+  final String displayNmae;
 }
