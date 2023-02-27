@@ -20,7 +20,7 @@ PixabayInfo _$PixabayInfoFromJson(Map<String, dynamic> json) {
 
 /// @nodoc
 mixin _$PixabayInfo {
-  String get imageURL => throw _privateConstructorUsedError;
+  String? get previewURL => throw _privateConstructorUsedError;
   int get likes => throw _privateConstructorUsedError;
 
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -35,7 +35,7 @@ abstract class $PixabayInfoCopyWith<$Res> {
           PixabayInfo value, $Res Function(PixabayInfo) then) =
       _$PixabayInfoCopyWithImpl<$Res, PixabayInfo>;
   @useResult
-  $Res call({String imageURL, int likes});
+  $Res call({String? previewURL, int likes});
 }
 
 /// @nodoc
@@ -51,14 +51,14 @@ class _$PixabayInfoCopyWithImpl<$Res, $Val extends PixabayInfo>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? imageURL = null,
+    Object? previewURL = freezed,
     Object? likes = null,
   }) {
     return _then(_value.copyWith(
-      imageURL: null == imageURL
-          ? _value.imageURL
-          : imageURL // ignore: cast_nullable_to_non_nullable
-              as String,
+      previewURL: freezed == previewURL
+          ? _value.previewURL
+          : previewURL // ignore: cast_nullable_to_non_nullable
+              as String?,
       likes: null == likes
           ? _value.likes
           : likes // ignore: cast_nullable_to_non_nullable
@@ -75,7 +75,7 @@ abstract class _$$_PixabayInfoCopyWith<$Res>
       __$$_PixabayInfoCopyWithImpl<$Res>;
   @override
   @useResult
-  $Res call({String imageURL, int likes});
+  $Res call({String? previewURL, int likes});
 }
 
 /// @nodoc
@@ -89,14 +89,14 @@ class __$$_PixabayInfoCopyWithImpl<$Res>
   @pragma('vm:prefer-inline')
   @override
   $Res call({
-    Object? imageURL = null,
+    Object? previewURL = freezed,
     Object? likes = null,
   }) {
     return _then(_$_PixabayInfo(
-      imageURL: null == imageURL
-          ? _value.imageURL
-          : imageURL // ignore: cast_nullable_to_non_nullable
-              as String,
+      previewURL: freezed == previewURL
+          ? _value.previewURL
+          : previewURL // ignore: cast_nullable_to_non_nullable
+              as String?,
       likes: null == likes
           ? _value.likes
           : likes // ignore: cast_nullable_to_non_nullable
@@ -108,19 +108,19 @@ class __$$_PixabayInfoCopyWithImpl<$Res>
 /// @nodoc
 @JsonSerializable()
 class _$_PixabayInfo implements _PixabayInfo {
-  const _$_PixabayInfo({required this.imageURL, required this.likes});
+  const _$_PixabayInfo({required this.previewURL, required this.likes});
 
   factory _$_PixabayInfo.fromJson(Map<String, dynamic> json) =>
       _$$_PixabayInfoFromJson(json);
 
   @override
-  final String imageURL;
+  final String? previewURL;
   @override
   final int likes;
 
   @override
   String toString() {
-    return 'PixabayInfo(imageURL: $imageURL, likes: $likes)';
+    return 'PixabayInfo(previewURL: $previewURL, likes: $likes)';
   }
 
   @override
@@ -128,14 +128,14 @@ class _$_PixabayInfo implements _PixabayInfo {
     return identical(this, other) ||
         (other.runtimeType == runtimeType &&
             other is _$_PixabayInfo &&
-            (identical(other.imageURL, imageURL) ||
-                other.imageURL == imageURL) &&
+            (identical(other.previewURL, previewURL) ||
+                other.previewURL == previewURL) &&
             (identical(other.likes, likes) || other.likes == likes));
   }
 
   @JsonKey(ignore: true)
   @override
-  int get hashCode => Object.hash(runtimeType, imageURL, likes);
+  int get hashCode => Object.hash(runtimeType, previewURL, likes);
 
   @JsonKey(ignore: true)
   @override
@@ -153,14 +153,14 @@ class _$_PixabayInfo implements _PixabayInfo {
 
 abstract class _PixabayInfo implements PixabayInfo {
   const factory _PixabayInfo(
-      {required final String imageURL,
+      {required final String? previewURL,
       required final int likes}) = _$_PixabayInfo;
 
   factory _PixabayInfo.fromJson(Map<String, dynamic> json) =
       _$_PixabayInfo.fromJson;
 
   @override
-  String get imageURL;
+  String? get previewURL;
   @override
   int get likes;
   @override

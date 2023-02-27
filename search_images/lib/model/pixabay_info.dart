@@ -6,7 +6,7 @@ part 'pixabay_info.g.dart';
 @freezed
 class PixabayInfo with _$PixabayInfo {
   const factory PixabayInfo({
-    required String imageURL,
+    required String? previewURL,
     required int likes,
   }) = _PixabayInfo;
 

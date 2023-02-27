@@ -8,12 +8,12 @@ part of 'pixabay_info.dart';
 
 _$_PixabayInfo _$$_PixabayInfoFromJson(Map<String, dynamic> json) =>
     _$_PixabayInfo(
-      imageURL: json['imageURL'] as String,
+      previewURL: json['previewURL'] as String?,
       likes: json['likes'] as int,
     );
 
 Map<String, dynamic> _$$_PixabayInfoToJson(_$_PixabayInfo instance) =>
     <String, dynamic>{
-      'imageURL': instance.imageURL,
+      'previewURL': instance.previewURL,
       'likes': instance.likes,
     };
