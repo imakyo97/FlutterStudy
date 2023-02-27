@@ -1,4 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:search_images/api/api_client.dart';
+import 'package:search_images/model/pixabay_info.dart';
 
 void main() {
   runApp(const MyApp());
@@ -28,7 +31,20 @@ class SearchImagePage extends StatefulWidget {
 }
 
 class _SearchImagePageState extends State<SearchImagePage> {
-  List imagesURL = [];
+  List<PixabayInfo> hits = [];
+
+  void featchImage() async {
+    final pixabayImages = await ApiClient(dio: Dio()).fetchPixabayImages();
+    setState(() {
+      hits = pixabayImages.hits;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    featchImage();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,14 +63,17 @@ class _SearchImagePageState extends State<SearchImagePage> {
         ),
       ),
       body: GridView.builder(
-        itemCount: imagesURL.length,
+        itemCount: hits.length,
         gridDelegate:
             const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
         itemBuilder: ((context, index) {
-          return Image.network(
-            imagesURL[index],
-            fit: BoxFit.cover,
-          );
+          if (hits[index].previewURL != null) {
+            return Image.network(
+              hits[index].previewURL!,
+              fit: BoxFit.cover,
+            );
+          }
+          return const SizedBox();
         }),
       ),
     );
