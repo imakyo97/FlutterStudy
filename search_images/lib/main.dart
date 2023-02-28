@@ -32,12 +32,20 @@ class SearchImagePage extends StatefulWidget {
 
 class _SearchImagePageState extends State<SearchImagePage> {
   List<PixabayInfo> hits = [];
+  bool isLoding = false;
 
   void featchImage({String q = '月'}) async {
-    final pixabayImages = await ApiClient(dio: Dio()).fetchPixabayImages(q: q);
     setState(() {
-      hits = pixabayImages.hits;
+      isLoding = true;
     });
+    ApiClient(dio: Dio()).fetchPixabayImages(q: q).then(
+      (pixabayImages) {
+        setState(() {
+          isLoding = false;
+          hits = pixabayImages.hits;
+        });
+      },
+    );
   }
 
   @override
@@ -65,19 +73,24 @@ class _SearchImagePageState extends State<SearchImagePage> {
           },
         ),
       ),
-      body: GridView.builder(
-        itemCount: hits.length,
-        gridDelegate:
-            const SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 3),
-        itemBuilder: ((context, index) {
-          if (hits[index].previewURL != null) {
-            return Image.network(
-              hits[index].previewURL!,
-              fit: BoxFit.cover,
-            );
-          }
-          return const SizedBox();
-        }),
+      body: Stack(
+        children: [
+          GridView.builder(
+            itemCount: hits.length,
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3),
+            itemBuilder: ((context, index) {
+              if (hits[index].previewURL != null) {
+                return Image.network(
+                  hits[index].previewURL!,
+                  fit: BoxFit.cover,
+                );
+              }
+              return const SizedBox();
+            }),
+          ),
+          if (isLoding) const Center(child: CircularProgressIndicator()),
+        ],
       ),
     );
   }
