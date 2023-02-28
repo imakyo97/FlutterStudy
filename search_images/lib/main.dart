@@ -33,8 +33,8 @@ class SearchImagePage extends StatefulWidget {
 class _SearchImagePageState extends State<SearchImagePage> {
   List<PixabayInfo> hits = [];
 
-  void featchImage() async {
-    final pixabayImages = await ApiClient(dio: Dio()).fetchPixabayImages();
+  void featchImage({String q = '月'}) async {
+    final pixabayImages = await ApiClient(dio: Dio()).fetchPixabayImages(q: q);
     setState(() {
       hits = pixabayImages.hits;
     });
@@ -60,6 +60,9 @@ class _SearchImagePageState extends State<SearchImagePage> {
               borderSide: BorderSide.none,
             ),
           ),
+          onSubmitted: (value) {
+            featchImage(q: value);
+          },
         ),
       ),
       body: GridView.builder(

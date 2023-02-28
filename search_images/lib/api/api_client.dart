@@ -6,7 +6,7 @@ class ApiClient {
 
   ApiClient({required this.dio});
 
-  Future<PixabayImages> fetchPixabayImages({String q = '月'}) async {
+  Future<PixabayImages> fetchPixabayImages({required String q}) async {
     const baseURL = 'https://pixabay.com/api';
     const key = '';
     const imageType = 'photo';
