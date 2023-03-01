@@ -51,13 +51,15 @@ class _SearchImagePageState extends State<SearchImagePage> {
   }
 
   void didTapImage({required int index}) async {
-    final imageURL = hits[index].previewURL!;
-    final imageBytes =
-        (await NetworkAssetBundle(Uri.parse(imageURL)).load(imageURL))
-            .buffer
-            .asUint8List();
-    final xFile = XFile.fromData(imageBytes);
-    await Share.shareXFiles([xFile], text: 'Image Shared');
+    if (hits[index].previewURL != null) {
+      final imageURL = hits[index].previewURL!;
+      final imageBytes =
+          (await NetworkAssetBundle(Uri.parse(imageURL)).load(imageURL))
+              .buffer
+              .asUint8List();
+      final xFile = XFile.fromData(imageBytes);
+      await Share.shareXFiles([xFile], text: 'Image Shared');
+    }
   }
 
   @override
