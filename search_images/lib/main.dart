@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:search_images/api/api_client.dart';
 import 'package:search_images/model/pixabay_info.dart';
+import 'package:share_plus/share_plus.dart';
 
 void main() {
   runApp(const MyApp());
@@ -48,6 +50,16 @@ class _SearchImagePageState extends State<SearchImagePage> {
     );
   }
 
+  void didTapImage({required int index}) async {
+    final imageURL = hits[index].previewURL!;
+    final imageBytes =
+        (await NetworkAssetBundle(Uri.parse(imageURL)).load(imageURL))
+            .buffer
+            .asUint8List();
+    final xFile = XFile.fromData(imageBytes);
+    await Share.shareXFiles([xFile], text: 'Image Shared');
+  }
+
   @override
   void initState() {
     super.initState();
@@ -81,32 +93,35 @@ class _SearchImagePageState extends State<SearchImagePage> {
                 crossAxisCount: 3),
             itemBuilder: ((context, index) {
               if (hits[index].previewURL != null) {
-                return Stack(
-                  fit: StackFit.expand,
-                  children: [
-                    Image.network(
-                      hits[index].previewURL!,
-                      fit: BoxFit.cover,
-                    ),
-                    Align(
-                      alignment: Alignment.bottomRight,
-                      child: Container(
-                        color: Colors.white,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            const Icon(
-                              Icons.thumb_up_alt_outlined,
-                              size: 16,
-                            ),
-                            Text(
-                              hits[index].likes.toString(),
-                            ),
-                          ],
+                return InkWell(
+                  onTap: () => didTapImage(index: index),
+                  child: Stack(
+                    fit: StackFit.expand,
+                    children: [
+                      Image.network(
+                        hits[index].previewURL!,
+                        fit: BoxFit.cover,
+                      ),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Container(
+                          color: Colors.white,
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              const Icon(
+                                Icons.thumb_up_alt_outlined,
+                                size: 16,
+                              ),
+                              Text(
+                                hits[index].likes.toString(),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 );
               }
               return const SizedBox();
