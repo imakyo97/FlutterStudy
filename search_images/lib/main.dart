@@ -92,37 +92,15 @@ class _SearchImagePageState extends State<SearchImagePage> {
           GridView.builder(
             itemCount: hits.length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 3),
+              crossAxisCount: 3,
+            ),
             itemBuilder: ((context, index) {
               if (hits[index].previewURL != null) {
                 return InkWell(
                   onTap: () => didTapImage(index: index),
-                  child: Stack(
-                    fit: StackFit.expand,
-                    children: [
-                      Image.network(
-                        hits[index].previewURL!,
-                        fit: BoxFit.cover,
-                      ),
-                      Align(
-                        alignment: Alignment.bottomRight,
-                        child: Container(
-                          color: Colors.white,
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              const Icon(
-                                Icons.thumb_up_alt_outlined,
-                                size: 16,
-                              ),
-                              Text(
-                                hits[index].likes.toString(),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  child: ImageItem(
+                    hits: hits,
+                    index: index,
                   ),
                 );
               }
@@ -132,6 +110,48 @@ class _SearchImagePageState extends State<SearchImagePage> {
           if (isLoding) const Center(child: CircularProgressIndicator()),
         ],
       ),
+    );
+  }
+}
+
+class ImageItem extends StatelessWidget {
+  const ImageItem({
+    Key? key,
+    required this.hits,
+    required this.index,
+  }) : super(key: key);
+
+  final List<PixabayInfo> hits;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      fit: StackFit.expand,
+      children: [
+        Image.network(
+          hits[index].previewURL!,
+          fit: BoxFit.cover,
+        ),
+        Align(
+          alignment: Alignment.bottomRight,
+          child: Container(
+            color: Colors.white,
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                const Icon(
+                  Icons.thumb_up_alt_outlined,
+                  size: 16,
+                ),
+                Text(
+                  hits[index].likes.toString(),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }
