@@ -81,9 +81,32 @@ class _SearchImagePageState extends State<SearchImagePage> {
                 crossAxisCount: 3),
             itemBuilder: ((context, index) {
               if (hits[index].previewURL != null) {
-                return Image.network(
-                  hits[index].previewURL!,
-                  fit: BoxFit.cover,
+                return Stack(
+                  fit: StackFit.expand,
+                  children: [
+                    Image.network(
+                      hits[index].previewURL!,
+                      fit: BoxFit.cover,
+                    ),
+                    Align(
+                      alignment: Alignment.bottomRight,
+                      child: Container(
+                        color: Colors.white,
+                        child: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            const Icon(
+                              Icons.thumb_up_alt_outlined,
+                              size: 16,
+                            ),
+                            Text(
+                              hits[index].likes.toString(),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
                 );
               }
               return const SizedBox();
