@@ -1,12 +1,12 @@
-import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:search_images/api/api_client.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:search_images/model/pixabay_info.dart';
+import 'package:search_images/provider/pixabay_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
@@ -25,32 +25,16 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class SearchImagePage extends StatefulWidget {
-  const SearchImagePage({super.key});
+class SearchImagePage extends ConsumerStatefulWidget {
+  const SearchImagePage({Key? key}) : super(key: key);
 
   @override
-  State<SearchImagePage> createState() => _SearchImagePageState();
+  SearchImagePageState createState() => SearchImagePageState();
 }
 
-class _SearchImagePageState extends State<SearchImagePage> {
-  List<PixabayInfo> hits = [];
-  bool isLoding = false;
-
-  void featchImage({String q = '月'}) async {
-    setState(() {
-      isLoding = true;
-    });
-    ApiClient(dio: Dio()).fetchPixabayImages(q: q).then(
-      (pixabayImages) {
-        setState(() {
-          isLoding = false;
-          hits = pixabayImages.hits;
-        });
-      },
-    );
-  }
-
-  void didTapImage({required int index}) async {
+class SearchImagePageState extends ConsumerState<SearchImagePage> {
+  void didTapImage(
+      {required List<PixabayInfo> hits, required int index}) async {
     if (hits[index].previewURL != null) {
       final imageURL = hits[index].previewURL!;
       final imageBytes =
@@ -65,11 +49,14 @@ class _SearchImagePageState extends State<SearchImagePage> {
   @override
   void initState() {
     super.initState();
-    featchImage();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(pixabayProvider.notifier).fetchPixabayImages('月');
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final pixabayImages = ref.watch(pixabayProvider);
     return Scaffold(
       appBar: AppBar(
         title: TextField(
@@ -83,23 +70,24 @@ class _SearchImagePageState extends State<SearchImagePage> {
             ),
           ),
           onSubmitted: (value) {
-            featchImage(q: value);
+            ref.read(pixabayProvider.notifier).fetchPixabayImages(value);
           },
         ),
       ),
       body: Stack(
         children: [
           GridView.builder(
-            itemCount: hits.length,
+            itemCount: (pixabayImages.value?.hits ?? []).length,
             gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
               crossAxisCount: 3,
             ),
             itemBuilder: ((context, index) {
-              if (hits[index].previewURL != null) {
+              if ((pixabayImages.value?.hits ?? [])[index].previewURL != null) {
                 return InkWell(
-                  onTap: () => didTapImage(index: index),
+                  onTap: () => didTapImage(
+                      hits: (pixabayImages.value?.hits ?? []), index: index),
                   child: ImageItem(
-                    hits: hits,
+                    hits: (pixabayImages.value?.hits ?? []),
                     index: index,
                   ),
                 );
@@ -107,7 +95,8 @@ class _SearchImagePageState extends State<SearchImagePage> {
               return const SizedBox();
             }),
           ),
-          if (isLoding) const Center(child: CircularProgressIndicator()),
+          if (pixabayImages.isLoading)
+            const Center(child: CircularProgressIndicator()),
         ],
       ),
     );
