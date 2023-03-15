@@ -47,16 +47,8 @@ class SearchImagePageState extends ConsumerState<SearchImagePage> {
   }
 
   @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(pixabayProvider.notifier).fetchPixabayImages('月');
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final pixabayImages = ref.watch(pixabayProvider);
+    AsyncValue pixabayImages = ref.watch(pixabayImagesFutureProvider);
     return Scaffold(
       appBar: AppBar(
         title: TextField(
@@ -70,7 +62,7 @@ class SearchImagePageState extends ConsumerState<SearchImagePage> {
             ),
           ),
           onSubmitted: (value) {
-            ref.read(pixabayProvider.notifier).fetchPixabayImages(value);
+            ref.read(searchTermProvider.notifier).state = value;
           },
         ),
       ),
