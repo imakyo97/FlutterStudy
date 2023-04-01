@@ -40,8 +40,8 @@ class _ObjectBoxPageState extends State<ObjectBoxPage> {
   final userBox = store.box<User>();
   List<User> users = [];
 
-  String _addUserText = '';
-  String _deleteUserId = '';
+  var _addUserController = TextEditingController();
+  var _deleteUserController = TextEditingController();
 
   @override
   void initState() {
@@ -58,17 +58,15 @@ class _ObjectBoxPageState extends State<ObjectBoxPage> {
         child: Column(
           children: [
             TextField(
-              onChanged: (value) {
-                _addUserText = value;
-              },
+              controller: _addUserController,
             ),
             const SizedBox(
               height: 24,
             ),
             ElevatedButton(
               onPressed: () {
-                if (_addUserText.isNotEmpty) {
-                  final user = User(name: _addUserText);
+                if (_addUserController.text.isNotEmpty) {
+                  final user = User(name: _addUserController.text);
                   userBox.put(user);
                   setState(() {
                     users = userBox.getAll();
@@ -97,17 +95,15 @@ class _ObjectBoxPageState extends State<ObjectBoxPage> {
               height: 24,
             ),
             TextField(
-              onChanged: (value) {
-                _deleteUserId = value;
-              },
+              controller: _deleteUserController,
             ),
             const SizedBox(
               height: 24,
             ),
             ElevatedButton(
               onPressed: () {
-                if (_deleteUserId.isNotEmpty &&
-                    userBox.remove(int.parse(_deleteUserId))) {
+                if (_deleteUserController.text.isNotEmpty &&
+                    userBox.remove(int.parse(_deleteUserController.text))) {
                   setState(() {
                     users = userBox.getAll();
                   });
