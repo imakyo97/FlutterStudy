@@ -44,15 +44,14 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     });
   }
 
-  void incrementLifeEventCount(int index) {
-    final lifeEvent = _lifeEvents[index];
+  void incrementLifeEventCount(LifeEvent lifeEvent) {
     lifeEvent.counter++;
     _lifeEventBox.put(lifeEvent);
     fetchLifeEvents();
   }
 
-  void removeLifeEvent(int index) {
-    final isRemoved = _lifeEventBox.remove(_lifeEvents[index].id);
+  void removeLifeEvent(LifeEvent lifeEvent) {
+    final isRemoved = _lifeEventBox.remove(lifeEvent.id);
     if (isRemoved) {
       fetchLifeEvents();
     }
@@ -77,19 +76,20 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
       body: ListView.builder(
         itemCount: _lifeEvents.length,
         itemBuilder: ((context, index) {
+          final lifeEvent = _lifeEvents[index];
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             child: Row(
               children: [
-                Text(_lifeEvents[index].eventName),
+                Text(lifeEvent.eventName),
                 const Spacer(),
-                Text(_lifeEvents[index].counter.toString()),
+                Text(lifeEvent.counter.toString()),
                 IconButton(
                   icon: const Icon(Icons.plus_one),
-                  onPressed: () => incrementLifeEventCount(index),
+                  onPressed: () => incrementLifeEventCount(lifeEvent),
                 ),
                 IconButton(
-                  onPressed: () => removeLifeEvent(index),
+                  onPressed: () => removeLifeEvent(lifeEvent),
                   icon: const Icon(Icons.delete),
                 ),
               ],
