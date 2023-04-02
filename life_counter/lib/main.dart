@@ -51,25 +51,35 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
       body: ListView.builder(
         itemCount: _lifeEvents.length,
         itemBuilder: ((context, index) {
-          return Row(
-            children: [
-              Text(_lifeEvents[index].eventName),
-              const Spacer(),
-              Text(_lifeEvents[index].counter.toString()),
-              IconButton(
-                icon: const Icon(Icons.plus_one),
-                onPressed: () {},
-              ),
-            ],
+          return Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16),
+            child: Row(
+              children: [
+                Text(_lifeEvents[index].eventName),
+                const Spacer(),
+                Text(_lifeEvents[index].counter.toString()),
+                IconButton(
+                  icon: const Icon(Icons.plus_one),
+                  onPressed: () {},
+                ),
+              ],
+            ),
           );
         }),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          Navigator.push(
+        onPressed: () async {
+          final eventName = await Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => const AddLifeEventScreen()),
+            MaterialPageRoute(builder: (context) => AddLifeEventScreen()),
           );
+          if (eventName.toString().isNotEmpty) {
+            final lifeEvent = LifeEvent(eventName: eventName, counter: 1);
+            _lifeEventBox.put(lifeEvent);
+            setState(() {
+              _lifeEvents = _lifeEventBox.getAll();
+            });
+          }
         },
         child: const Icon(Icons.add),
       ),
