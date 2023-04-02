@@ -71,6 +71,18 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                     });
                   },
                 ),
+                IconButton(
+                  onPressed: (() {
+                    final isRemoved =
+                        _lifeEventBox.remove(_lifeEvents[index].id);
+                    if (isRemoved) {
+                      setState(() {
+                        _lifeEvents = _lifeEventBox.getAll();
+                      });
+                    }
+                  }),
+                  icon: const Icon(Icons.delete),
+                ),
               ],
             ),
           );
