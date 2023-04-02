@@ -35,6 +35,10 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   Future<void> initialize() async {
     final store = await openStore();
     _lifeEventBox = store.box<LifeEvent>();
+    fetchLifeEvents();
+  }
+
+  void fetchLifeEvents() {
     setState(() {
       _lifeEvents = _lifeEventBox.getAll();
     });
@@ -66,9 +70,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                     final lifeEvent = _lifeEvents[index];
                     lifeEvent.counter++;
                     _lifeEventBox.put(lifeEvent);
-                    setState(() {
-                      _lifeEvents = _lifeEventBox.getAll();
-                    });
+                    fetchLifeEvents();
                   },
                 ),
                 IconButton(
@@ -76,9 +78,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                     final isRemoved =
                         _lifeEventBox.remove(_lifeEvents[index].id);
                     if (isRemoved) {
-                      setState(() {
-                        _lifeEvents = _lifeEventBox.getAll();
-                      });
+                      fetchLifeEvents();
                     }
                   }),
                   icon: const Icon(Icons.delete),
@@ -97,9 +97,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
           if (eventName.toString().isNotEmpty) {
             final lifeEvent = LifeEvent(eventName: eventName, counter: 1);
             _lifeEventBox.put(lifeEvent);
-            setState(() {
-              _lifeEvents = _lifeEventBox.getAll();
-            });
+            fetchLifeEvents();
           }
         },
         child: const Icon(Icons.add),
