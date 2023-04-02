@@ -44,6 +44,26 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
     });
   }
 
+  void incrementLifeEventCount(int index) {
+    final lifeEvent = _lifeEvents[index];
+    lifeEvent.counter++;
+    _lifeEventBox.put(lifeEvent);
+    fetchLifeEvents();
+  }
+
+  void removeLifeEvent(int index) {
+    final isRemoved = _lifeEventBox.remove(_lifeEvents[index].id);
+    if (isRemoved) {
+      fetchLifeEvents();
+    }
+  }
+
+  void addLifeEvent(String eventName) {
+    final lifeEvent = LifeEvent(eventName: eventName, counter: 1);
+    _lifeEventBox.put(lifeEvent);
+    fetchLifeEvents();
+  }
+
   @override
   void initState() {
     super.initState();
@@ -66,21 +86,10 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                 Text(_lifeEvents[index].counter.toString()),
                 IconButton(
                   icon: const Icon(Icons.plus_one),
-                  onPressed: () {
-                    final lifeEvent = _lifeEvents[index];
-                    lifeEvent.counter++;
-                    _lifeEventBox.put(lifeEvent);
-                    fetchLifeEvents();
-                  },
+                  onPressed: () => incrementLifeEventCount(index),
                 ),
                 IconButton(
-                  onPressed: (() {
-                    final isRemoved =
-                        _lifeEventBox.remove(_lifeEvents[index].id);
-                    if (isRemoved) {
-                      fetchLifeEvents();
-                    }
-                  }),
+                  onPressed: () => removeLifeEvent(index),
                   icon: const Icon(Icons.delete),
                 ),
               ],
@@ -95,9 +104,7 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
             MaterialPageRoute(builder: (context) => AddLifeEventScreen()),
           );
           if (eventName.toString().isNotEmpty) {
-            final lifeEvent = LifeEvent(eventName: eventName, counter: 1);
-            _lifeEventBox.put(lifeEvent);
-            fetchLifeEvents();
+            addLifeEvent(eventName);
           }
         },
         child: const Icon(Icons.add),
