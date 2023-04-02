@@ -35,7 +35,9 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
   Future<void> initialize() async {
     final store = await openStore();
     _lifeEventBox = store.box<LifeEvent>();
-    _lifeEvents = _lifeEventBox.getAll();
+    setState(() {
+      _lifeEvents = _lifeEventBox.getAll();
+    });
   }
 
   @override
@@ -60,7 +62,14 @@ class _LifeCounterPageState extends State<LifeCounterPage> {
                 Text(_lifeEvents[index].counter.toString()),
                 IconButton(
                   icon: const Icon(Icons.plus_one),
-                  onPressed: () {},
+                  onPressed: () {
+                    final lifeEvent = _lifeEvents[index];
+                    lifeEvent.counter++;
+                    _lifeEventBox.put(lifeEvent);
+                    setState(() {
+                      _lifeEvents = _lifeEventBox.getAll();
+                    });
+                  },
                 ),
               ],
             ),
