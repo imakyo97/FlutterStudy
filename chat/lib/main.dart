@@ -1,3 +1,6 @@
+import 'package:chat/model/post.dart';
+import 'package:chat/view/chat_page.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -22,20 +25,18 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
+      home: const SignInPage(),
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+class SignInPage extends StatefulWidget {
+  const SignInPage({super.key});
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<SignInPage> createState() => _SignInPageState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  String email = '';
-
+class _SignInPageState extends State<SignInPage> {
   Future<void> signInWithGoogle() async {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
@@ -47,28 +48,41 @@ class _MyHomePageState extends State<MyHomePage> {
       idToken: googleAuth?.idToken,
     );
 
-    final userCredential =
-        await FirebaseAuth.instance.signInWithCredential(credential);
-    setState(() {
-      email = userCredential.user?.email ?? 'emailなし';
-    });
+    await FirebaseAuth.instance.signInWithCredential(credential);
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(
+        title: const Text('GoogleSignIn'),
+      ),
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Text(email),
-            ElevatedButton(
-              onPressed: () => signInWithGoogle(),
-              child: const Text('Google認証'),
-            ),
-          ],
+        child: ElevatedButton(
+          onPressed: () async {
+            await signInWithGoogle();
+
+            if (mounted) {
+              Navigator.pushAndRemoveUntil(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const ChatPage();
+                  },
+                ),
+                (route) => false,
+              );
+            }
+          },
+          child: const Text('GoogleSignIn'),
         ),
       ),
     );
   }
 }
+
+final postsReference =
+    FirebaseFirestore.instance.collection('post').withConverter(
+          fromFirestore: (snapshot, _) => Post.fromFirestore(snapshot),
+          toFirestore: (post, _) => post.toMap(),
+        );
