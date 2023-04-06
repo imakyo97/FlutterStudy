@@ -22,7 +22,7 @@ class _ChatPageState extends State<ChatPage> {
         children: [
           Expanded(
             child: StreamBuilder<QuerySnapshot<Post>>(
-              stream: postsReference.snapshots(),
+              stream: postsReference.orderBy('createdAt').snapshots(),
               builder: (context, snapshot) {
                 final docs = snapshot.data?.docs ?? [];
                 return ListView.builder(
