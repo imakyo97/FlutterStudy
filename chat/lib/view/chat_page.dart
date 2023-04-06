@@ -18,29 +18,48 @@ class _ChatPageState extends State<ChatPage> {
       appBar: AppBar(
         title: const Text('チャット'),
       ),
-      body: Center(
-        child: TextFormField(
-          onFieldSubmitted: ((text) {
-            final user = FirebaseAuth.instance.currentUser!;
+      body: Column(
+        children: [
+          Expanded(
+            child: StreamBuilder<QuerySnapshot<Post>>(
+              stream: postsReference.snapshots(),
+              builder: (context, snapshot) {
+                final docs = snapshot.data?.docs ?? [];
+                return ListView.builder(
+                  itemCount: docs.length,
+                  itemBuilder: (context, index) {
+                    final post = docs[index].data();
+                    return Text(post.text);
+                  },
+                );
+              },
+            ),
+          ),
+          Center(
+            child: TextFormField(
+              onFieldSubmitted: ((text) {
+                final user = FirebaseAuth.instance.currentUser!;
 
-            final posterId = user.uid;
-            final posterName = user.displayName!;
-            final posterImageUrl = user.photoURL!;
+                final posterId = user.uid;
+                final posterName = user.displayName!;
+                final posterImageUrl = user.photoURL!;
 
-            final newDocumentReference = postsReference.doc();
+                final newDocumentReference = postsReference.doc();
 
-            final newPost = Post(
-              text: text,
-              createdAt: Timestamp.now(), // 投稿日時は現在とします
-              posterName: posterName,
-              posterImageUrl: posterImageUrl,
-              posterId: posterId,
-              reference: newDocumentReference,
-            );
+                final newPost = Post(
+                  text: text,
+                  createdAt: Timestamp.now(), // 投稿日時は現在とします
+                  posterName: posterName,
+                  posterImageUrl: posterImageUrl,
+                  posterId: posterId,
+                  reference: newDocumentReference,
+                );
 
-            newDocumentReference.set(newPost);
-          }),
-        ),
+                newDocumentReference.set(newPost);
+              }),
+            ),
+          ),
+        ],
       ),
     );
   }
