@@ -1,5 +1,7 @@
+import 'package:chat/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class MyPage extends StatelessWidget {
   const MyPage({super.key});
@@ -34,9 +36,32 @@ class MyPage extends StatelessWidget {
               alignment: Alignment.centerLeft,
               child: Text('登録日：${user.metadata.creationTime!}'),
             ),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () => didTapSignOut(
+                () {
+                  Navigator.pushAndRemoveUntil(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) {
+                        return const SignInPage();
+                      },
+                    ),
+                    (route) => false,
+                  );
+                },
+              ),
+              child: const Text('サインアウト'),
+            ),
           ],
         ),
       ),
     );
+  }
+
+  void didTapSignOut(void Function() onSuccess) async {
+    await GoogleSignIn().signOut();
+    await FirebaseAuth.instance.signOut();
+    onSuccess();
   }
 }
