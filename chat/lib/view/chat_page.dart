@@ -1,5 +1,6 @@
 import 'package:chat/main.dart';
 import 'package:chat/model/post.dart';
+import 'package:chat/view/my_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -17,6 +18,24 @@ class _ChatPageState extends State<ChatPage> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('チャット'),
+        actions: [
+          InkWell(
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) {
+                    return const MyPage();
+                  },
+                ),
+              );
+            },
+            child: CircleAvatar(
+              backgroundImage:
+                  NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
+            ),
+          )
+        ],
       ),
       body: Column(
         children: [
