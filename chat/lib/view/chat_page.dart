@@ -125,16 +125,29 @@ class PostWidget extends StatelessWidget {
                     ),
                   ],
                 ),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color:
-                        FirebaseAuth.instance.currentUser!.uid == post.posterId
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(4),
+                        color: FirebaseAuth.instance.currentUser!.uid ==
+                                post.posterId
                             ? Colors.amber[100]
                             : Colors.blue[100],
-                  ),
-                  child: Text(post.text),
+                      ),
+                      child: Text(post.text),
+                    ),
+                    if (FirebaseAuth.instance.currentUser!.uid == post.posterId)
+                      IconButton(
+                        onPressed: () {
+                          // 削除は reference に対して delete() を呼ぶだけでよい。
+                          post.reference.delete();
+                        },
+                        icon: const Icon(Icons.delete),
+                      ),
+                  ],
                 ),
               ],
             ),
