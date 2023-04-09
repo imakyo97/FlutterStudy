@@ -4,6 +4,7 @@ import 'package:chat/view/my_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage({super.key});
@@ -48,7 +49,7 @@ class _ChatPageState extends State<ChatPage> {
                   itemCount: docs.length,
                   itemBuilder: (context, index) {
                     final post = docs[index].data();
-                    return Text(post.text);
+                    return PostWidget(post: post);
                   },
                 );
               },
@@ -76,6 +77,66 @@ class _ChatPageState extends State<ChatPage> {
 
                 newDocumentReference.set(newPost);
               }),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class PostWidget extends StatelessWidget {
+  const PostWidget({
+    Key? key,
+    required this.post,
+  }) : super(key: key);
+
+  final Post post;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Row(
+        children: [
+          CircleAvatar(
+            backgroundImage: NetworkImage(
+              post.posterImageUrl,
+            ),
+          ),
+          const SizedBox(width: 8),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      post.posterName,
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 12,
+                      ),
+                    ),
+                    Text(
+                      DateFormat('MM/dd HH:mm').format(post.createdAt.toDate()),
+                      style: const TextStyle(fontSize: 10),
+                    ),
+                  ],
+                ),
+                Container(
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color:
+                        FirebaseAuth.instance.currentUser!.uid == post.posterId
+                            ? Colors.amber[100]
+                            : Colors.blue[100],
+                  ),
+                  child: Text(post.text),
+                ),
+              ],
             ),
           ),
         ],
