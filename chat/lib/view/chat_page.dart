@@ -1,5 +1,5 @@
-import 'package:chat/main.dart';
 import 'package:chat/model/post.dart';
+import 'package:chat/references.dart';
 import 'package:chat/view/my_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
