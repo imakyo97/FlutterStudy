@@ -1,19 +1,21 @@
 import 'package:chat/model/post.dart';
+import 'package:chat/providers/posts_provider.dart';
 import 'package:chat/references.dart';
 import 'package:chat/view/my_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
 
-class ChatPage extends StatefulWidget {
+class ChatPage extends ConsumerStatefulWidget {
   const ChatPage({super.key});
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _ChatPageState extends ConsumerState<ChatPage> {
   final textEditingController = TextEditingController();
 
   @override
@@ -53,16 +55,24 @@ class _ChatPageState extends State<ChatPage> {
         body: Column(
           children: [
             Expanded(
-              child: StreamBuilder<QuerySnapshot<Post>>(
-                stream: postsReference.orderBy('createdAt').snapshots(),
-                builder: (context, snapshot) {
-                  final docs = snapshot.data?.docs ?? [];
+              child: ref.watch(postsProvider).when(
+                data: (data) {
                   return ListView.builder(
-                    itemCount: docs.length,
+                    itemCount: data.docs.length,
                     itemBuilder: (context, index) {
-                      final post = docs[index].data();
+                      final post = data.docs[index].data();
                       return PostWidget(post: post);
                     },
+                  );
+                },
+                error: (error, stackTrace) {
+                  return const Center(
+                    child: Text('不具合が発生しました。'),
+                  );
+                },
+                loading: () {
+                  return const Center(
+                    child: CircularProgressIndicator(),
                   );
                 },
               ),
