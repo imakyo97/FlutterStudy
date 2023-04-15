@@ -1,6 +1,6 @@
 import 'package:chat/model/post.dart';
 import 'package:chat/providers/posts_provider.dart';
-import 'package:chat/references.dart';
+import 'package:chat/providers/posts_reference_provider.dart';
 import 'package:chat/view/my_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -117,7 +117,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     final posterName = user.displayName!;
     final posterImageUrl = user.photoURL!;
 
-    final newDocumentReference = postsReference.doc();
+    final newDocumentReference = ref.read(postsReferenceProvider).doc();
 
     final newPost = Post(
       text: text,
