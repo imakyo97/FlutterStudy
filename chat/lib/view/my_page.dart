@@ -1,14 +1,14 @@
-import 'package:chat/main.dart';
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:chat/providers/auth_provider.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class MyPage extends StatelessWidget {
+class MyPage extends ConsumerWidget {
   const MyPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final user = FirebaseAuth.instance.currentUser!;
+  Widget build(BuildContext context, WidgetRef ref) {
+    final user = ref.watch(userProvider).value;
     return Scaffold(
       appBar: AppBar(title: const Text('マイページ')),
       body: Container(
@@ -17,11 +17,11 @@ class MyPage extends StatelessWidget {
         child: Column(
           children: [
             CircleAvatar(
-              backgroundImage: NetworkImage(user.photoURL!),
+              backgroundImage: NetworkImage(user?.photoURL ?? ''),
               radius: 40,
             ),
             Text(
-              user.displayName!,
+              user?.displayName ?? '',
               style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 fontSize: 20,
@@ -30,26 +30,17 @@ class MyPage extends StatelessWidget {
             const SizedBox(height: 16),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text('ユーザーID：${user.uid}'),
+              child: Text('ユーザーID：${user?.uid ?? ''}'),
             ),
             Align(
               alignment: Alignment.centerLeft,
-              child: Text('登録日：${user.metadata.creationTime!}'),
+              child: Text('登録日：${user?.metadata.creationTime ?? ''}'),
             ),
             const SizedBox(height: 16),
             ElevatedButton(
               onPressed: () => didTapSignOut(
-                () {
-                  Navigator.pushAndRemoveUntil(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) {
-                        return const SignInPage();
-                      },
-                    ),
-                    (route) => false,
-                  );
-                },
+                ref,
+                Navigator.of(context),
               ),
               child: const Text('サインアウト'),
             ),
@@ -59,9 +50,9 @@ class MyPage extends StatelessWidget {
     );
   }
 
-  void didTapSignOut(void Function() onSuccess) async {
+  void didTapSignOut(WidgetRef ref, NavigatorState navigator) async {
     await GoogleSignIn().signOut();
-    await FirebaseAuth.instance.signOut();
-    onSuccess();
+    await ref.read(firebaseAuthProvider).signOut();
+    navigator.pop();
   }
 }

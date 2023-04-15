@@ -1,9 +1,9 @@
 import 'package:chat/model/post.dart';
+import 'package:chat/providers/auth_provider.dart';
 import 'package:chat/providers/posts_provider.dart';
 import 'package:chat/providers/posts_reference_provider.dart';
 import 'package:chat/view/my_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:intl/intl.dart';
@@ -47,7 +47,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               },
               child: CircleAvatar(
                 backgroundImage:
-                    NetworkImage(FirebaseAuth.instance.currentUser!.photoURL!),
+                    NetworkImage(ref.watch(userProvider).value!.photoURL!),
               ),
             )
           ],
@@ -111,7 +111,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   Future<void> sendPost(String text) async {
-    final user = FirebaseAuth.instance.currentUser!;
+    final user = ref.watch(userProvider).value!;
 
     final posterId = user.uid;
     final posterName = user.displayName!;
@@ -132,7 +132,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 }
 
-class PostWidget extends StatelessWidget {
+class PostWidget extends ConsumerWidget {
   const PostWidget({
     Key? key,
     required this.post,
@@ -141,7 +141,7 @@ class PostWidget extends StatelessWidget {
   final Post post;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Row(
@@ -179,14 +179,15 @@ class PostWidget extends StatelessWidget {
                       padding: const EdgeInsets.all(8),
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(4),
-                        color: FirebaseAuth.instance.currentUser!.uid ==
+                        color: (ref.read(userProvider).value?.uid ?? '') ==
                                 post.posterId
                             ? Colors.amber[100]
                             : Colors.blue[100],
                       ),
                       child: Text(post.text),
                     ),
-                    if (FirebaseAuth.instance.currentUser!.uid == post.posterId)
+                    if ((ref.read(userProvider).value?.uid ?? '') ==
+                        post.posterId)
                       Row(
                         children: [
                           IconButton(
