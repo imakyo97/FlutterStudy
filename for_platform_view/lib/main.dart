@@ -12,9 +12,26 @@ class MainApp extends StatelessWidget {
     return const MaterialApp(
       home: Scaffold(
         body: Center(
-          child: Text('Hello World!'),
+          child: SizedBox(
+            width: 200,
+            height: 88,
+            child: NativeView(),
+          ),
         ),
       ),
+    );
+  }
+}
+
+class NativeView extends StatelessWidget {
+  const NativeView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    const String viewType = 'login_text_field';
+
+    return const UiKitView(
+      viewType: viewType,
     );
   }
 }
