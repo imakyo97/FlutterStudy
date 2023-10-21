@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 void main() {
   runApp(const MainApp());
@@ -30,8 +31,16 @@ class NativeView extends StatelessWidget {
   Widget build(BuildContext context) {
     const String viewType = 'login_text_field';
 
-    return const UiKitView(
+    final Map<String, dynamic> creationParams = <String, dynamic>{
+      'didChangeText': 'test',
+    };
+
+    return UiKitView(
       viewType: viewType,
+      creationParams:
+          creationParams, // create(withFrame:, viewIdentifier, arguments)のargumentsの値になる
+      creationParamsCodec:
+          const StandardMessageCodec(), // プラットフォーム側に送信する前にcreationParamsをエンコードするために使用されるコーデック。createArgsCodec()の返り値と一致する必要がある
     );
   }
 }
